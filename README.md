@@ -56,8 +56,8 @@ A arquitetura final do sistema é a **Arquitetura Híbrida Direta (AHD) com Cicl
 
 1.  **Clone o repositório:**
     ```sh
-    git clone [URL_DO_SEU_REPOSITORIO]
-    cd seu_projeto
+    git clone https://github.com/vthamada/AgenteCSV.git
+    cd AgenteCSV
     ```
 
 2.  **Crie e ative um ambiente virtual (recomendado):**
