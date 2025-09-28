@@ -2,6 +2,8 @@
 
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 from modelos_llm import make_llm, GEMINI_MODELS, OPENAI_MODELS, OPENROUTER_MODELS
 from core.perception import load_catalog_from_uploads, create_data_passport
 from core.orchestrator import Orchestrator
@@ -82,7 +84,10 @@ if up:
                     st.markdown(msg["content"]["text"])
                     if "figures" in msg["content"] and msg["content"]["figures"]:
                         for fig in msg["content"]["figures"]:
-                            st.pyplot(fig)
+                            if isinstance(fig, plt.Figure):
+                                st.pyplot(fig)
+                            elif isinstance(fig, go.Figure):
+                                st.plotly_chart(fig, use_container_width=True)
                     if isinstance(msg["content"].get("table"), pd.DataFrame): 
                         st.dataframe(msg["content"]["table"], use_container_width=True)
                     if msg["content"].get("code"):
@@ -110,7 +115,10 @@ if up:
                         
                         if "figures" in result and result["figures"]:
                             for fig in result["figures"]:
-                                st.pyplot(fig)
+                                if isinstance(fig, plt.Figure):
+                                    st.pyplot(fig)
+                                elif isinstance(fig, go.Figure):
+                                    st.plotly_chart(fig, use_container_width=True)
                         if isinstance(result.get("table"), pd.DataFrame):
                             st.dataframe(result["table"], use_container_width=True)
                         if result.get("code"):

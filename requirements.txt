@@ -4,3 +4,5 @@ matplotlib
 langchain
 langchain-openai
 langchain-google-genai
+tabulate
+plotly

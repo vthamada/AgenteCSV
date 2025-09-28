@@ -10,12 +10,13 @@ import builtins
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 if TYPE_CHECKING:
     from core.memory import CognitiveMemory
 
 # Lista de módulos permitidos (whitelist) para importação
-ALLOWED_IMPORTS = {'pandas', 'numpy', 'matplotlib'}
+ALLOWED_IMPORTS = {'pandas', 'numpy', 'matplotlib', 'plotly'}
 
 class SecurityException(Exception):
     """Exceção customizada para violações de segurança."""
@@ -63,7 +64,6 @@ class CodeGenerationAgent:
         history = self.memory.get_history_summary()
         
         schema_summary = []
-        # Pega o nome da primeira tabela para usar como um exemplo dinâmico e realista no prompt
         example_table_name = next(iter(self.catalog.keys()), 'nome_da_tabela_exemplo')
 
         for table_name, df in self.catalog.items():
@@ -76,13 +76,14 @@ class CodeGenerationAgent:
 
         **REGRAS DE EXECUÇÃO E ROBUSTEZ:**
         1.  **CRÍTICO:** Todas as declarações de `import` DEVEM estar DENTRO da função `solve` para garantir o escopo correto.
-        2.  Você PODE e DEVE usar `import` para as bibliotecas `pandas`, `numpy`, e `matplotlib`.
+        2.  Você PODE e DEVE usar `import` para as bibliotecas `pandas`, `numpy`, `matplotlib` e `plotly`.
         3.  QUALQUER TENTATIVA de importar um módulo que não seja `{', '.join(ALLOWED_IMPORTS)}` irá falhar.
-        4.  SEMPRE crie figuras com um tamanho razoável, por exemplo: `plt.figure(figsize=(10, 6))`.
+        4.  SEMPRE crie figuras com um tamanho razoável. Para Matplotlib use `figsize=(10, 6)`. Para Plotly, use `fig.update_layout(width=800, height=600)`.
         5.  SEJA DEFENSIVO: Para operações matemáticas, garanta que a coluna é numérica usando `pd.to_numeric(df['coluna'], errors='coerce')`.
         6.  Para formatar tabelas como texto, use `.to_string()` para evitar dependências externas.
         7.  A saída da sua função DEVE ser uma tupla: `(texto: str, tabela: pd.DataFrame|None, figura: plt.Figure|None)`.
-
+        8.  **NÃO inclua a tabela como texto** (usando `.to_string()` ou `.to_markdown()`) na variável `text_output` se você já a está retornando na variável `table_output`. Apenas retorne o objeto DataFrame.
+        
         **ESQUEMA DOS DADOS DISPONÍVEIS:**
         {schema_str}
 
@@ -99,11 +100,11 @@ class CodeGenerationAgent:
             
             # Seu código de análise vai aqui.
             # Lembre-se de usar o nome da tabela do ESQUEMA acima.
-            df = catalog['{example_table_name}'] # Exemplo de acesso ao DataFrame
+            df = catalog['{example_table_name}'] 
             
             text_output = "# Análise Concluída"
             table_output = None
-            figure_output = None
+            figure_output = None # Pode ser um objeto plt.Figure ou go.Figure
 
             return (text_output, table_output, figure_output)
         ```
@@ -131,7 +132,7 @@ class CodeGenerationAgent:
         - Analise a mensagem de erro para entender a causa raiz (ex: erro de tipo, método inexistente, coluna não encontrada, escopo de importação).
         - Reescreva a função `solve` completamente, aplicando a correção. Lembre-se que os imports devem estar DENTRO da função.
         - Não escreva explicações, apenas o bloco de código da função `solve` corrigida.
-        - Mantenha todas as regras de segurança e formato da tentativa original.
+        - Mantenha todas as regras de segurança e formato da tentativa original, incluindo a preferência por Plotly.
 
         Agora, forneça o código corrigido.
         """
