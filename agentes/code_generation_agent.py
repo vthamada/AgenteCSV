@@ -83,6 +83,7 @@ class CodeGenerationAgent:
         6.  Para formatar tabelas como texto, use `.to_string()` para evitar dependências externas.
         7.  A saída da sua função DEVE ser uma tupla: `(texto: str, tabela: pd.DataFrame|None, figura: plt.Figure|None)`.
         8.  **NÃO inclua a tabela como texto** (usando `.to_string()` ou `.to_markdown()`) na variável `text_output` se você já a está retornando na variável `table_output`. Apenas retorne o objeto DataFrame.
+        9.  **Visualização:** Prefira `plotly.express` para gráficos interativos (`import plotly.express as px`).
         
         **ESQUEMA DOS DADOS DISPONÍVEIS:**
         {schema_str}
@@ -97,6 +98,8 @@ class CodeGenerationAgent:
             import pandas as pd
             import numpy as np
             import matplotlib.pyplot as plt
+            import plotly.express as px
+            import plotly.graph_objects as go
             
             # Seu código de análise vai aqui.
             # Lembre-se de usar o nome da tabela do ESQUEMA acima.
