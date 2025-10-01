@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from core.memory import CognitiveMemory
 
 # Lista de módulos permitidos (whitelist) para importação
-ALLOWED_IMPORTS = {'pandas', 'numpy', 'matplotlib', 'plotly'}
+ALLOWED_IMPORTS = {'pandas', 'numpy', 'matplotlib', 'plotly', 'sklearn'}
 
 class SecurityException(Exception):
     """Exceção customizada para violações de segurança."""
@@ -76,7 +76,7 @@ class CodeGenerationAgent:
 
         **REGRAS DE EXECUÇÃO E ROBUSTEZ:**
         1.  **CRÍTICO:** Todas as declarações de `import` DEVEM estar DENTRO da função `solve` para garantir o escopo correto.
-        2.  Você PODE e DEVE usar `import` para as bibliotecas `pandas`, `numpy`, `matplotlib` e `plotly`.
+        2.  Você PODE e DEVE usar `import` para as bibliotecas `pandas`, `numpy`, `matplotlib`, `plotly` e `sklearn`.
         3.  QUALQUER TENTATIVA de importar um módulo que não seja `{', '.join(ALLOWED_IMPORTS)}` irá falhar.
         4.  SEMPRE crie figuras com um tamanho razoável. Para Matplotlib use `figsize=(10, 6)`. Para Plotly, use `fig.update_layout(width=800, height=600)`.
         5.  SEJA DEFENSIVO: Para operações matemáticas, garanta que a coluna é numérica usando `pd.to_numeric(df['coluna'], errors='coerce')`.
